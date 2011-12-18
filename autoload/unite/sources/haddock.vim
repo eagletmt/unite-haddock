@@ -49,7 +49,7 @@ function! s:source.action_table.browse_remote.func(candidates)
   for l:candidate in a:candidates
     let l:mod = l:candidate.word
     let l:pkg = s:find_pkg(l:mod)
-    let l:m = matchlist(l:pkg, '^\([^-]\+\)-\(.\+\)$')
+    let l:m = matchlist(l:pkg, '^\(.\+\)-\([.0-9]\{-}\)$')
     let l:name = l:m[1]
     let l:ver = l:m[2]
     if l:name ==# 'ghc'
