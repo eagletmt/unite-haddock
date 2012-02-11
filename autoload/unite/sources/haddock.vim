@@ -1,5 +1,5 @@
 function! unite#sources#haddock#define()
-  if executable('ghc-mod') && executable('ghc-pkg')
+  if executable('ghc-pkg')
     return s:source
   else
     return []
@@ -12,8 +12,19 @@ let s:source = {
       \ 'default_action': 'browse_local',
       \ }
 
+function! s:get_modules()
+  let l:mods = []
+  for l:line in split(unite#util#system("ghc-pkg field '*' exposed-modules"), '\n')
+    let l:line = substitute(l:line, '^exposed-modules:', '', '')
+    let l:line = substitute(l:line, '^\s\+', '', '')
+    call extend(l:mods, split(l:line, ' '))
+  endfor
+  call sort(l:mods)
+  return l:mods
+endfunction
+
 function! s:source.gather_candidates(args, context)
-  let l:mods = split(unite#util#system('ghc-mod list'), '\n')
+  let l:mods = s:get_modules()
   return map(l:mods, '{ "word": v:val, "source": "haddock", "kind": "uri" }')
 endfunction
 
