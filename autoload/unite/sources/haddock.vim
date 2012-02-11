@@ -52,8 +52,13 @@ function! s:source.action_table.browse_remote.func(candidates)
     let l:m = matchlist(l:pkg, '^\(.\+\)-\([.0-9]\{-}\)$')
     let l:name = l:m[1]
     let l:ver = l:m[2]
-    if l:name ==# 'ghc'
-      let l:path = printf('http://www.haskell.org/ghc/docs/%s/html/libraries/ghc-%s/%s.html', l:ver, l:ver, substitute(l:mod, '\.', '-', 'g'))
+    if l:name ==# 'ghc' || l:name ==# 'ghc-prim'
+      if l:name ==# 'ghc'
+        let l:ghc_ver = l:ver
+      else
+        let l:ghc_ver = unite#util#system('ghc --numeric-version')
+      endif
+      let l:path = printf('http://www.haskell.org/ghc/docs/%s/html/libraries/%s-%s/%s.html', l:ghc_ver, l:name, l:ver, substitute(l:mod, '\.', '-', 'g'))
     else
       let l:path = printf('http://hackage.haskell.org/packages/archive/%s/%s/doc/html/%s.html', l:name, l:ver, substitute(l:mod, '\.', '-', 'g'))
     endif
