@@ -26,7 +26,7 @@ function! s:kind.action_table.browse_local.func(candidates)
     let l:path = printf('%s/%s.html', l:dir, substitute(l:mod, '\.', '-', 'g'))
     if filereadable(l:path)
       let l:path .= get(l:candidate, 'action__haddock_fragment', '')
-      call unite#take_action('start', extend(deepcopy(l:candidate), { 'action__path': 'file://' . l:path }))
+      call s:browse(l:candidate, 'file://' . l:path)
     else
       call unite#util#print_error(printf("documentation for '%s' (%s) does not exist", l:mod, l:pkg))
     endif
@@ -59,11 +59,19 @@ function! s:kind.action_table.browse_remote.func(candidates)
       let l:path = printf('http://hackage.haskell.org/packages/archive/%s/%s/doc/html/%s.html', l:name, l:ver, substitute(l:mod, '\.', '-', 'g'))
     endif
     let l:path .= get(l:candidate, 'action__haddock_fragment', '')
-    call unite#take_action('start', extend(deepcopy(l:candidate), { 'action__path': l:path }))
+    call s:browse(l:candidate, l:path)
   endfor
 endfunction
 
 function! s:find_pkg(mod)
   let l:output = unite#util#system('ghc-pkg find-module --simple-output ' . a:mod)
   return matchstr(get(split(l:output, '\n'), 0), '^\S\+')
+endfunction
+
+function! s:browse(candidate, uri)
+  if exists('g:unite_source_haddock_browser')
+    call unite#util#system(printf('%s %s &', g:unite_source_haddock_browser, shellescape(a:uri)))
+  else
+    call unite#take_action('start', extend(deepcopy(a:candidate), { 'action__path': a:uri }))
+  endif
 endfunction
