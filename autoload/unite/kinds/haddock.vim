@@ -25,6 +25,7 @@ function! s:kind.action_table.browse_local.func(candidates)
     let l:dir = matchstr(substitute(l:output, '\n', ' ', 'g'), 'haddock-html: \zs\S\+\ze')
     let l:path = printf('%s/%s.html', l:dir, substitute(l:mod, '\.', '-', 'g'))
     if filereadable(l:path)
+      let l:path .= get(l:candidate, 'action__haddock_fragment', '')
       call unite#take_action('start', extend(deepcopy(l:candidate), { 'action__path': 'file://' . l:path }))
     else
       call unite#util#print_error(printf("documentation for '%s' (%s) does not exist", l:mod, l:pkg))
@@ -57,6 +58,7 @@ function! s:kind.action_table.browse_remote.func(candidates)
     else
       let l:path = printf('http://hackage.haskell.org/packages/archive/%s/%s/doc/html/%s.html', l:name, l:ver, substitute(l:mod, '\.', '-', 'g'))
     endif
+    let l:path .= get(l:candidate, 'action__haddock_fragment', '')
     call unite#take_action('start', extend(deepcopy(l:candidate), { 'action__path': l:path }))
   endfor
 endfunction
