@@ -20,6 +20,11 @@ Opens remote haddock (Hackage)
 
 ## Global Variables
 
+### g:unite\_source\_hoogle\_max\_candidates
+The maximal number of candidates of hoogle.
+
+Default: 200
+
 ### g:unite\_source\_haddock\_browser
 The browser used to view documentations.
 
