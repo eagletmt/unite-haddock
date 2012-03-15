@@ -1,9 +1,12 @@
 # unite-haddock
 
-[unite.vim](https://github.com/Shougo/unite.vim) source for haddock
+[unite.vim](https://github.com/Shougo/unite.vim) source for haddock and hoogle
 
 ## Usage
 `:Unite haddock` shows all installed modules.
+
+`:Unite hoogle` shows the result of hoogle command.
+You have to install the hoogle command by `cabal install hoogle` to enable this source.
 
 ## Actions
 
