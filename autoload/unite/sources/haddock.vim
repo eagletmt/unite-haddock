@@ -21,5 +21,5 @@ endfunction
 
 function! s:source.gather_candidates(args, context)
   let l:mods = s:get_modules()
-  return map(l:mods, '{ "word": v:val, "source": "haddock", "kind": "haddock" }')
+  return map(l:mods, '{ "word": v:val, "source": "haddock", "kind": "haddock", "action__haddock_module": v:val }')
 endfunction

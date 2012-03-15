@@ -15,7 +15,11 @@ let s:kind.action_table.browse_local = {
       \ }
 function! s:kind.action_table.browse_local.func(candidates)
   for l:candidate in a:candidates
-    let l:mod = l:candidate.word
+    let l:mod = l:candidate.action__haddock_module
+    if empty(l:mod)
+      call unite#util#print_error(printf("No module is defined for '%s'", get(l:candidate, 'abbr', l:candidate.word)))
+      continue
+    endif
     let l:pkg = s:find_pkg(l:mod)
     let l:output = unite#util#system('ghc-pkg field ' . l:pkg . ' haddock-html')
     let l:dir = matchstr(substitute(l:output, '\n', ' ', 'g'), 'haddock-html: \zs\S\+\ze')
@@ -34,7 +38,11 @@ let s:kind.action_table.browse_remote = {
       \ }
 function! s:kind.action_table.browse_remote.func(candidates)
   for l:candidate in a:candidates
-    let l:mod = l:candidate.word
+    let l:mod = l:candidate.action__haddock_module
+    if empty(l:mod)
+      call unite#util#print_error(printf("No module is defined for '%s'", get(l:candidate, 'abbr', l:candidate.word)))
+      continue
+    endif
     let l:pkg = s:find_pkg(l:mod)
     let l:m = matchlist(l:pkg, '^\(.\+\)-\([.0-9]\{-}\)$')
     let l:name = l:m[1]
