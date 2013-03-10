@@ -18,6 +18,8 @@ Opens local haddock.
 ### browse\_remote
 Opens remote haddock (Hackage)
 
+- Note: If you'd like to make this action default, add `call unite#custom_default_action('haddock', 'browse_remote')` to your vimrc. See `:help unite#custom_default_action()` for more detail.
+
 ## Global Variables
 
 ### g:unite\_source\_hoogle\_max\_candidates
@@ -29,7 +31,7 @@ Default: 200
 The browser used to view documentations.
 
 Normally, you don't have to set this variable.
-If you uses a minor DE (e.g. awesome) and `xdg-open` fails to recognize local file URIs correctly, set this variable manually in your `~/.vimrc`.
+If you're using a minor DE (e.g. awesome, XMonad) and `xdg-open` fails to recognize local file URIs correctly, set this variable manually in your `~/.vimrc`.
 
 ~~~vim
 let g:unite_source_haddock_browser = 'firefox'
