@@ -8,6 +8,9 @@
 `:Unite hoogle` shows the result of hoogle command.
 You have to install the hoogle command by `cabal install hoogle` to enable this source.
 
+`:Unite hoogle:exact` shows the result of hoogle _exact_ search.
+It corresponds to passing `--exact` argument to hoogle.
+
 ## Actions
 
 ### browse\_local (default)

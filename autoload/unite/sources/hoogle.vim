@@ -13,7 +13,8 @@ let s:source = {
       \ }
 
 function! s:source.gather_candidates(args, context)
-  let l:output = unite#util#system(printf('hoogle search -l -n %d %s', s:max_candidates(), shellescape(a:context.input)))
+  let l:exact = !empty(filter(copy(a:args), 'v:val ==# "exact"'))
+  let l:output = unite#util#system(printf('hoogle search --link --count %d %s%s', s:max_candidates(), l:exact ? '--exact ' : '', shellescape(a:context.input)))
   if unite#util#get_last_status() == 0
     return map(split(l:output, '\n'), 's:parse(a:context.input, v:val)')
   else
