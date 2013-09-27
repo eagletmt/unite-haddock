@@ -10,7 +10,7 @@ let s:source = { 'name': 'haddock' }
 
 function! s:get_modules()
   let l:mods = []
-  for l:line in split(unite#util#system("ghc-pkg field '*' exposed-modules"), '\n')
+  for l:line in split(unite#haddock#ghc_pkg("field '*' exposed-modules"), '\n')
     let l:line = substitute(l:line, '^exposed-modules:', '', '')
     let l:line = substitute(l:line, '^\s\+', '', '')
     call extend(l:mods, split(l:line, ' '))
