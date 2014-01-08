@@ -23,6 +23,9 @@ Opens remote haddock (Hackage)
 
 - Note: If you'd like to make this action default, add `call unite#custom_default_action('haddock', 'browse_remote')` to your vimrc. See `:help unite#custom_default_action()` for more detail.
 
+### preview
+Shows the information in the preview window.
+
 ## Global Variables
 
 ### g:unite\_source\_hoogle\_max\_candidates
