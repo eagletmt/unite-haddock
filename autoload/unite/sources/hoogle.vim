@@ -17,13 +17,13 @@ function! s:source.gather_candidates(args, context)
   let l:exact = !empty(filter(copy(a:args), 'v:val ==# "exact"'))
   let l:output = unite#util#system(printf('hoogle search --link --count %d %s%s', s:max_candidates(), s:exact_flag(l:exact), shellescape(a:context.input)))
   if unite#util#get_last_status() == 0
-    return map(split(l:output, '\n'), printf('s:parse(a:context.input, v:key, v:val, %d)', l:exact))
+    return map(split(l:output, '\n'), 's:make_candidate(a:context.input, v:key, v:val, l:exact)')
   else
     return []
   endif
 endfunction
 
-function! s:parse(input, index, line, exact)
+function! s:make_candidate(input, index, line, exact)
   let l:line = matchstr(a:line, '^.\+\ze -- http://')
   let l:candidate = {
         \ 'word': a:input,
