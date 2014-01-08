@@ -40,12 +40,12 @@ function! s:parse(input, index, line)
   endif
 
   let [l:mod, l:sym, l:rest] = l:m[1 : 3]
+  let l:candidate.action__haddock_index = a:index
   if l:mod ==# 'package'
     return l:candidate
   else
     let l:candidate.action__haddock_module = l:mod
     let l:candidate.action__haddock_fragment = matchstr(l:rest, '#.\+$')
-    let l:candidate.action__haddock_index = a:index
     return l:candidate
   endif
 endfunction
