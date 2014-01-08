@@ -19,12 +19,14 @@ Opens local haddock.
 - Note: To generate local documentations, you must install packages with `--enable-documentation`, or edit $HOME/.cabal/config: `documentation: True`.
 
 ### browse\_remote
-Opens remote haddock (Hackage)
+Opens remote haddock (Hackage).
 
 - Note: If you'd like to make this action default, add `call unite#custom_default_action('haddock', 'browse_remote')` to your vimrc. See `:help unite#custom_default_action()` for more detail.
 
-### preview
+### preview (hoogle only)
 Shows the information in the preview window.
+
+- Note: You can preview the informatin by pressing `p` key on a candidate.
 
 ## Global Variables
 
