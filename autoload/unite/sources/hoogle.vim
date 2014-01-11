@@ -24,7 +24,7 @@ function! s:source.gather_candidates(args, context)
 endfunction
 
 function! s:make_candidate(input, index, line, exact)
-  let l:line = matchstr(a:line, '^.\+\ze -- http://')
+  let l:line = matchstr(a:line, '^.\+\ze -- \(\(http\|file\)://\)\?')
   let l:candidate = {
         \ 'word': a:input,
         \ 'abbr': l:line,
@@ -32,8 +32,8 @@ function! s:make_candidate(input, index, line, exact)
         \ 'kind': 'haddock',
         \ 'action__haddock_module': '',
         \ 'action__haddock_fragment': '',
-        \ 'action__haddock_index': 1,
-        \ 'action__haddock_exact': 0,
+        \ 'action__haddock_index': a:index,
+        \ 'action__haddock_exact': a:exact,
         \ }
   let l:m = matchlist(a:line, '^\(\S\+\)\s\+\(\S\+\)\(.*\)$')
   if empty(l:m)
@@ -41,8 +41,6 @@ function! s:make_candidate(input, index, line, exact)
   endif
 
   let [l:mod, l:sym, l:rest] = l:m[1 : 3]
-  let l:candidate.action__haddock_index = a:index
-  let l:candidate.action__haddock_exact = a:exact
   if l:mod ==# 'package'
     return l:candidate
   else
