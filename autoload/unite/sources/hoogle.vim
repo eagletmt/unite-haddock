@@ -15,20 +15,9 @@ let s:source = {
 
 function! s:source.gather_candidates(args, context)
   let l:exact = !empty(filter(copy(a:args), 'v:val ==# "exact"'))
-  let l:output = unite#util#system(printf('hoogle search --link --count %d %s%s', s:max_candidates(), s:exact_flag(l:exact), shellescape(a:context.input)))
+  let l:output = unite#util#system(printf('hoogle search --verbose --link --count %d %s%s', s:max_candidates(), s:exact_flag(l:exact), shellescape(a:context.input)))
   if unite#util#get_last_status() == 0
-    let l:lines = split(l:output, '\n')
-    let l:start_pos = 0
-    if a:context.input =~# '^\s*.oogle\s*$'
-      let l:start_pos += 1
-    endif
-    if stridx(l:lines[l:start_pos], 'Did you mean: ') == 0
-      let l:start_pos += 1
-    endif
-    if stridx(l:lines[l:start_pos], 'No results found') == 0
-      let l:start_pos += 1
-    endif
-    return map(l:lines[l:start_pos :], 's:make_candidate(a:context.input, v:key, v:val, l:exact)')
+    return map(split(s:remove_verbose(l:output, 0), '\n'), 's:make_candidate(a:context.input, v:key, v:val, l:exact)')
   else
     return []
   endif
@@ -76,14 +65,14 @@ function! s:source.action_table['*'].preview.func(candidate)
   let l:start = a:candidate.action__haddock_index + 1
   let l:exact = s:exact_flag(a:candidate.action__haddock_exact)
   let l:query = shellescape(a:candidate.word)
-  let l:output = unite#util#system(printf('hoogle search --info --start %d %s%s', l:start, l:exact, l:query))
+  let l:output = unite#util#system(printf('hoogle search --verbose --info --start %d %s%s', l:start, l:exact, l:query))
   silent pedit! hoogle
   wincmd P
   setlocal buftype=nofile
   setlocal noswapfile
   setlocal syntax=none
   setlocal bufhidden=delete
-  silent put = l:output
+  silent put = s:remove_verbose(l:output, 1)
   silent 1 delete _
   wincmd p
   redraw!
@@ -91,5 +80,12 @@ endfunction
 
 function! s:exact_flag(exact)
   return a:exact ? '--exact ' : ''
+endfunction
+
+function! s:remove_verbose(output, once)
+  let l:output = substitute(a:output, '^.*= ANSWERS =\n', '', '')
+  let l:output = substitute(l:output, '^No results found\n', '', '')
+  let l:output = substitute(l:output, '  -- \(\a\+\(+\a\+\)*\)*', '', a:once ? '' : 'g')
+  return l:output
 endfunction
 
