@@ -17,7 +17,8 @@ function! s:source.gather_candidates(args, context)
   let l:exact = !empty(filter(copy(a:args), 'v:val ==# "exact"'))
   let l:output = unite#util#system(printf('hoogle search --verbose --link --count %d %s%s', s:max_candidates(), s:exact_flag(l:exact), shellescape(a:context.input)))
   if unite#util#get_last_status() == 0
-    return map(split(s:remove_verbose(l:output, 0), '\n'), 's:make_candidate(a:context.input, v:key, v:val, l:exact)')
+    let l:candidates = map(split(s:remove_verbose(l:output, 0), '\n'), 's:make_candidate(a:context.input, v:key, v:val, l:exact)')
+    return filter(l:candidates, '!empty(v:val.action__haddock_module)')
   else
     return []
   endif
